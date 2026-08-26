@@ -276,10 +276,54 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "artists": {
+      "type": "section",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>Meet the artists</h2>",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "width": "100%",
+            "max_width": "none",
+            "alignment": "left",
+            "wrap": "balance"
+          }
+        },
+        "grid": {
+          "type": "artist-grid",
+          "settings": {
+            "source": "all",
+            "max_artists": 12,
+            "columns": 3,
+            "columns_mobile": "1",
+            "gap": 32,
+            "show_blurb": true,
+            "show_signature": false,
+            "cta_label": "View works",
+            "heading_tag": "h3"
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "grid"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "section_width": "page-width",
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "gap": 40,
+        "padding-block-start": 80,
+        "padding-block-end": 80
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "product_list_fa6P9H",
+    "artists"
   ]
 }
