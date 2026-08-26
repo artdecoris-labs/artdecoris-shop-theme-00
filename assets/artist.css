@@ -1,0 +1,129 @@
+/* Artist card and grid.
+   Art Decoris addition — not part of stock Horizon.
+   Colours and type come from theme settings so the block follows the palette. */
+
+.artist-grid {
+  display: grid;
+  gap: var(--artist-grid-gap, 32px);
+  grid-template-columns: repeat(var(--artist-grid-columns, 3), minmax(0, 1fr));
+}
+
+@media screen and (max-width: 749px) {
+  .artist-grid {
+    grid-template-columns: repeat(var(--artist-grid-columns-mobile, 1), minmax(0, 1fr));
+  }
+}
+
+.artist-card {
+  position: relative;
+  display: grid;
+  gap: 20px;
+  background: var(--color-background);
+  box-shadow: 0 0 0 1px rgba(var(--color-foreground-rgb), 0.12);
+  transition: box-shadow 240ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.artist-card:hover,
+.artist-card:focus-within {
+  box-shadow:
+    0 1px 2px rgba(var(--color-foreground-rgb), 0.05),
+    0 8px 24px -12px rgba(var(--color-foreground-rgb), 0.22);
+}
+
+.artist-card__media {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: rgba(var(--color-foreground-rgb), 0.04);
+}
+
+.artist-card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 420ms cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+.artist-card:hover .artist-card__media img,
+.artist-card:focus-within .artist-card__media img {
+  transform: scale(1.035);
+}
+
+.artist-card__body {
+  padding: 0 20px 24px;
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+
+.artist-card__name {
+  margin: 0;
+  font-family: var(--font-heading--family);
+  font-style: var(--font-heading--style);
+  font-weight: var(--font-heading--weight);
+  font-size: var(--font-size--xl);
+  line-height: 1.22;
+  color: var(--color-foreground);
+}
+
+/* One real link per card, stretched over the whole card. */
+.artist-card__name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.artist-card__name a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.artist-card__signature {
+  height: 34px;
+  width: auto;
+  opacity: 0.8;
+  filter: grayscale(1);
+}
+
+.artist-card__blurb {
+  margin: 0;
+  font-family: var(--font-body--family);
+  font-size: var(--font-size--sm);
+  line-height: 1.72;
+  color: rgba(var(--color-foreground-rgb), 0.78);
+}
+
+.artist-card__cta {
+  font-family: var(--font-subheading--family);
+  font-weight: var(--font-subheading--weight);
+  font-size: var(--font-size--xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-foreground);
+  border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.35);
+  padding-bottom: 2px;
+}
+
+.artist-card:hover .artist-card__cta,
+.artist-card:focus-within .artist-card__cta {
+  border-bottom-color: var(--color-foreground);
+}
+
+.artist-card__empty {
+  padding: 24px 20px;
+  font-family: var(--font-body--family);
+  font-size: var(--font-size--sm);
+  color: rgba(var(--color-foreground-rgb), 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artist-card,
+  .artist-card__media img {
+    transition: none;
+  }
+  .artist-card:hover .artist-card__media img,
+  .artist-card:focus-within .artist-card__media img {
+    transform: none;
+  }
+}

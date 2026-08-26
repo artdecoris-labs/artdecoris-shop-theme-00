@@ -1,0 +1,73 @@
+{%- doc -%}
+  Renders one artist from an `artist` metaobject entry.
+
+  Shared by the `artist-card` and `artist-grid` blocks so the markup lives in one place.
+
+  Expected metaobject fields (type: artist):
+    name       single_line_text_field   required
+    portrait   file_reference           recommended
+    blurb      multi_line_text_field    optional — short card text
+    signature  file_reference           optional
+    collection collection_reference     optional — the artist's works
+
+  @param {object} artist - an `artist` metaobject entry
+  @param {boolean} [show_blurb] - render the blurb
+  @param {boolean} [show_signature] - render the signature image
+  @param {string} [cta_label] - call-to-action text; hidden when blank
+  @param {string} [heading_tag] - h2 or h3, default h3
+
+  @example
+  {% render 'artist-card', artist: entry, show_blurb: true, cta_label: 'View works' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign artist_name = artist.name.value | default: artist.name | default: artist.handle
+  assign portrait = artist.portrait.value | default: artist.portrait
+  assign signature = artist.signature.value | default: artist.signature
+  assign blurb = artist.blurb.value | default: artist.blurb
+  assign artist_collection = artist.collection.value | default: artist.collection
+  assign tag = heading_tag | default: 'h3'
+
+  # Prefer the metaobject's own page; fall back to the artist's collection.
+  assign artist_url = artist.url
+  if artist_url == blank and artist_collection != blank
+    assign artist_url = artist_collection.url
+  endif
+-%}
+
+<div class="artist-card">
+  <div class="artist-card__media">
+    {%- if portrait != blank -%}
+      {% render 'image', image: portrait, alt_text_fallback: artist_name %}
+    {%- endif -%}
+  </div>
+
+  <div class="artist-card__body">
+    <{{ tag }} class="artist-card__name">
+      {%- if artist_url != blank -%}
+        <a href="{{ artist_url }}">{{ artist_name }}</a>
+      {%- else -%}
+        {{ artist_name }}
+      {%- endif -%}
+    </{{ tag }}>
+
+    {%- if show_signature and signature != blank -%}
+      <img
+        class="artist-card__signature"
+        src="{{ signature | image_url: height: 68 }}"
+        alt=""
+        loading="lazy"
+        width="120"
+        height="34"
+      >
+    {%- endif -%}
+
+    {%- if show_blurb and blurb != blank -%}
+      <p class="artist-card__blurb">{{ blurb }}</p>
+    {%- endif -%}
+
+    {%- if cta_label != blank and artist_url != blank -%}
+      <span class="artist-card__cta">{{ cta_label }}</span>
+    {%- endif -%}
+  </div>
+</div>

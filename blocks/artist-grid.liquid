@@ -1,0 +1,156 @@
+{% comment %}
+  Art Decoris — "Meet the artists".
+
+  Defaults to showing every artist, so adding a new one is a single metaobject
+  entry in the admin: no theme edit, no deploy. Switch source to "Selected" only
+  when a curated subset is genuinely wanted.
+{% endcomment %}
+
+{{ 'artist.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  if block.settings.source == 'selected'
+    assign artists = block.settings.artists
+  else
+    assign artists = metaobjects.artist.values
+  endif
+
+  assign limit = block.settings.max_artists
+-%}
+
+<div
+  class="artist-grid"
+  style="
+    --artist-grid-columns: {{ block.settings.columns }};
+    --artist-grid-columns-mobile: {{ block.settings.columns_mobile }};
+    --artist-grid-gap: {{ block.settings.gap }}px;
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if artists.size > 0 -%}
+    {%- for artist in artists limit: limit -%}
+      {% render 'artist-card',
+        artist: artist,
+        show_blurb: block.settings.show_blurb,
+        show_signature: block.settings.show_signature,
+        cta_label: block.settings.cta_label,
+        heading_tag: block.settings.heading_tag
+      %}
+    {%- endfor -%}
+  {%- else -%}
+    <div class="artist-card">
+      <p class="artist-card__empty">
+        No artists yet. Add entries under Content &rarr; Metaobjects &rarr; Artists and they
+        will appear here automatically.
+      </p>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Artist grid",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Artists shown",
+      "options": [
+        { "value": "all", "label": "All artists" },
+        { "value": "selected", "label": "Selected artists" }
+      ],
+      "default": "all",
+      "info": "\"All artists\" picks up new entries automatically."
+    },
+    {
+      "type": "metaobject_list",
+      "id": "artists",
+      "metaobject_type": "artist",
+      "label": "Artists",
+      "info": "Only used when \"Artists shown\" is set to Selected."
+    },
+    {
+      "type": "range",
+      "id": "max_artists",
+      "label": "Maximum shown",
+      "min": 1,
+      "max": 24,
+      "step": 1,
+      "default": 12,
+      "visible_if": "{{ block.settings.source == 'all' }}"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_blurb",
+      "label": "Show short description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_signature",
+      "label": "Show signature",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Link text",
+      "info": "Leave blank to hide. The whole card is clickable either way.",
+      "default": "View works"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "options": [
+        { "value": "h2", "label": "h2" },
+        { "value": "h3", "label": "h3" }
+      ],
+      "default": "h3"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Artist grid"
+    }
+  ]
+}
+{% endschema %}
