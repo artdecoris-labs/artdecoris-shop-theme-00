@@ -55,36 +55,14 @@
     class="header-logo__image-container header-logo__image-container--original"
     data-testid="header-logo"
   >
-    {% if settings.logo != blank %}
-      {% render 'image',
-        image: settings.logo,
-        class: 'header-logo__image',
-        height: settings.logo_height,
-        alt_text_fallback: alt_text_fallback,
-        text_fallback: shop.name,
-        style: logo_style
-      %}
-    {% else %}
-      {%- liquid
-        # Placeholder mark shown until a logo is set in theme settings.
-        # Sized from the same custom properties as the real logo so both
-        # paths render identically. Ratio matches the asset (350x293);
-        # update it if the master artwork changes.
-        assign prototype_aspect_ratio = 1.1945
-        assign prototype_width = settings.logo_height | times: prototype_aspect_ratio | ceil
-        assign prototype_width_mobile = settings.logo_height_mobile | times: prototype_aspect_ratio | ceil
-        assign prototype_style = '--header-logo-image-width: ' | append: prototype_width | append: 'px; --header-logo-image-width-mobile: ' | append: prototype_width_mobile | append: 'px; --header-logo-image-height: ' | append: settings.logo_height | append: 'px; --header-logo-image-height-mobile: ' | append: settings.logo_height_mobile | append: 'px;'
-      -%}
-      <img
-        src="{{ 'artdecoris-logo.png' | asset_url }}"
-        alt="{{ alt_text_fallback }}"
-        class="header-logo__image"
-        width="{{ prototype_width }}"
-        height="{{ settings.logo_height }}"
-        style="{{ prototype_style }}"
-        loading="eager"
-      >
-    {% endif %}
+    {% render 'image',
+      image: settings.logo,
+      class: 'header-logo__image',
+      height: settings.logo_height,
+      alt_text_fallback: alt_text_fallback,
+      text_fallback: shop.name,
+      style: logo_style
+    %}
   </span>
 
   {% if use_inverse_logo %}

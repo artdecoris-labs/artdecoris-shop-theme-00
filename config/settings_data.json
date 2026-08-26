@@ -9,8 +9,8 @@
  */
 {
   "current": {
-    "logo_height": 36,
-    "logo_height_mobile": 28,
+    "logo_height": 56,
+    "logo_height_mobile": 40,
     "page_background_color": "{{ settings.color_palette.background }}",
     "page_width": "narrow",
     "page_text_color": "{{ settings.color_palette.foreground }}",
@@ -107,7 +107,8 @@
       "foreground": "#12100E",
       "color1": "#3A352F",
       "color2": "#DED7CC"
-    }
+    },
+    "logo": "shopify://shop_images/artdecoris-logo.png"
   },
   "presets": {
     "Horizon": {
@@ -212,8 +213,8 @@
       }
     },
     "Art Decoris": {
-      "logo_height": 36,
-      "logo_height_mobile": 28,
+      "logo_height": 56,
+      "logo_height_mobile": 40,
       "page_background_color": "{{ settings.color_palette.background }}",
       "page_width": "narrow",
       "page_text_color": "{{ settings.color_palette.foreground }}",
@@ -310,7 +311,8 @@
         "foreground": "#12100E",
         "color1": "#3A352F",
         "color2": "#DED7CC"
-      }
+      },
+      "logo": "shopify://shop_images/artdecoris-logo.png"
     }
   }
 }
