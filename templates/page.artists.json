@@ -1,0 +1,49 @@
+{
+  "sections": {
+    "main": {
+      "type": "section",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "width": "100%",
+            "max_width": "none",
+            "alignment": "left",
+            "wrap": "balance"
+          }
+        },
+        "intro": {
+          "type": "page-content",
+          "settings": {}
+        },
+        "grid": {
+          "type": "artist-grid",
+          "settings": {
+            "source": "all",
+            "max_artists": 24,
+            "columns": 3,
+            "columns_mobile": "1",
+            "gap": 32,
+            "show_blurb": true,
+            "show_signature": false,
+            "cta_label": "View works",
+            "heading_tag": "h2"
+          }
+        }
+      },
+      "block_order": ["heading", "intro", "grid"],
+      "settings": {
+        "content_direction": "column",
+        "section_width": "page-width",
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "gap": 40,
+        "padding-block-start": 64,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": ["main"]
+}
