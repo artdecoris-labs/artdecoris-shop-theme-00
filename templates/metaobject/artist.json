@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "main": {
+      "type": "section",
+      "blocks": {
+        "story": {
+          "type": "artist-story",
+          "settings": {
+            "link_label": "View works"
+          }
+        }
+      },
+      "block_order": ["story"],
+      "settings": {
+        "content_direction": "column",
+        "section_width": "page-width",
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "gap": 32,
+        "padding-block-start": 64,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": ["main"]
+}

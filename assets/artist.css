@@ -127,3 +127,102 @@
     transform: none;
   }
 }
+
+/* ---- Artist story page (templates/metaobject/artist.json) ---- */
+
+.artist-story {
+  display: grid;
+  gap: 48px;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  align-items: start;
+  width: 100%;
+}
+
+@media screen and (max-width: 899px) {
+  .artist-story {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+
+.artist-story__portrait {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: rgba(var(--color-foreground-rgb), 0.04);
+}
+
+.artist-story__portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artist-story__body {
+  display: grid;
+  gap: 24px;
+  justify-items: start;
+  max-width: 62ch;
+}
+
+.artist-story__name {
+  margin: 0;
+  font-family: var(--font-heading--family);
+  font-style: var(--font-heading--style);
+  font-weight: var(--font-heading--weight);
+  font-size: var(--font-size--3xl);
+  line-height: 1.1;
+  letter-spacing: var(--font-h1--spacing);
+  color: var(--color-foreground);
+}
+
+.artist-story__blurb {
+  margin: 0;
+  font-family: var(--font-heading--family);
+  font-size: var(--font-size--lg);
+  line-height: 1.4;
+  color: rgba(var(--color-foreground-rgb), 0.72);
+}
+
+.artist-story__bio {
+  display: grid;
+  gap: 16px;
+  font-family: var(--font-body--family);
+  font-size: var(--font-size--md);
+  line-height: 1.72;
+  color: rgba(var(--color-foreground-rgb), 0.85);
+}
+
+/* metafield_tag wraps rich text in its own div, so the gap has to live there. */
+.artist-story__bio .metafield-rich_text_field {
+  display: grid;
+  gap: 16px;
+}
+
+.artist-story__bio p {
+  margin: 0;
+}
+
+.artist-story__signature {
+  height: 44px;
+  width: auto;
+  opacity: 0.8;
+  filter: grayscale(1);
+}
+
+.artist-story__link {
+  font-family: var(--font-subheading--family);
+  font-weight: var(--font-subheading--weight);
+  font-size: var(--font-size--xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-foreground);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.35);
+  padding-bottom: 3px;
+}
+
+.artist-story__link:hover,
+.artist-story__link:focus-visible {
+  border-bottom-color: var(--color-foreground);
+}

@@ -21,15 +21,15 @@
 {%- enddoc -%}
 
 {%- liquid
-  assign artist_name = artist.name.value | default: artist.name | default: artist.handle
+  assign artist_name = artist.name.value | default: artist.name | default: artist.system.handle
   assign portrait = artist.portrait.value | default: artist.portrait
   assign signature = artist.signature.value | default: artist.signature
   assign blurb = artist.blurb.value | default: artist.blurb
   assign artist_collection = artist.collection.value | default: artist.collection
   assign tag = heading_tag | default: 'h3'
 
-  # Prefer the metaobject's own page; fall back to the artist's collection.
-  assign artist_url = artist.url
+  # The entry’s own page lives on `system`, not on the entry itself. Prefer it's own page; fall back to the artist's collection.
+  assign artist_url = artist.system.url
   if artist_url == blank and artist_collection != blank
     assign artist_url = artist_collection.url
   endif
