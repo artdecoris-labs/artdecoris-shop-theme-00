@@ -55,14 +55,25 @@
     class="header-logo__image-container header-logo__image-container--original"
     data-testid="header-logo"
   >
-    {% render 'image',
-      image: settings.logo,
-      class: 'header-logo__image',
-      height: settings.logo_height,
-      alt_text_fallback: alt_text_fallback,
-      text_fallback: shop.name,
-      style: logo_style
-    %}
+    {% if settings.logo != blank %}
+      {% render 'image',
+        image: settings.logo,
+        class: 'header-logo__image',
+        height: settings.logo_height,
+        alt_text_fallback: alt_text_fallback,
+        text_fallback: shop.name,
+        style: logo_style
+      %}
+    {% else %}
+      <img
+        src="{{ '318955316.png' | asset_url }}"
+        alt="{{ alt_text_fallback }}"
+        class="header-logo__image header-logo__image--prototype"
+        width="{{ settings.logo_height }}"
+        height="{{ settings.logo_height }}"
+        loading="eager"
+      >
+    {% endif %}
   </span>
 
   {% if use_inverse_logo %}
