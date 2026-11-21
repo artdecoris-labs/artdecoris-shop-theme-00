@@ -101,7 +101,10 @@
         "padding-block-start": 100,
         "padding-block-end": 72,
         "image_1": "shopify://shop_images/hero-interior.webp"
-      }
+      },
+      "custom_css": [
+        ".hero {min-height: 100svh;}"
+      ]
     },
     "product_list_fa6P9H": {
       "type": "product-list",
