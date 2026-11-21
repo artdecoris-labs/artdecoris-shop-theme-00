@@ -1,0 +1,12 @@
+# Theme Check configuration for the Artdecoris Horizon theme.
+# Run with: shopify theme check
+#
+# The theme is a near-stock Horizon 4.1.4 baseline. Keeping it close to stock is
+# deliberate: it makes upstream Horizon upgrades almost conflict-free. Prefer
+# theme settings and presets over editing vendor files.
+
+extends: theme-check:recommended
+
+ignore:
+  - locales/*.json
+  - .git/**

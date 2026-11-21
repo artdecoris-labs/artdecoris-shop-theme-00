@@ -1,0 +1,16 @@
+# Copy this file to `shopify.theme.toml` and fill in the real values.
+#
+# `shopify.theme.toml` is gitignored on purpose: this repository is PUBLIC and
+# the store handle and theme IDs should not be published. Every developer keeps
+# their own local copy.
+#
+# Look the IDs up with:
+#   shopify theme list --store <your-store>.myshopify.com
+
+[environments.stage]
+store = "<your-store>.myshopify.com"
+theme = "<unpublished-stage-theme-id>"
+
+[environments.production]
+store = "<your-store>.myshopify.com"
+theme = "<published-live-theme-id>"

@@ -1,0 +1,99 @@
+{% comment %}
+  Art Decoris — the artist's own page.
+
+  Designed for templates/metaobject/artist.json, where Liquid exposes the current
+  entry as `metaobject`. The optional setting lets the same block be dropped on
+  any other page to feature one artist.
+{% endcomment %}
+
+{{ 'artist.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign artist = block.settings.artist | default: metaobject
+
+  assign artist_name = artist.name.value | default: artist.name | default: artist.system.handle
+  assign portrait = artist.portrait.value | default: artist.portrait
+  assign signature = artist.signature.value | default: artist.signature
+  assign blurb = artist.blurb.value | default: artist.blurb
+  assign artist_collection = artist.collection.value | default: artist.collection
+-%}
+
+{%- if artist != blank -%}
+  <div class="artist-story" {{ block.shopify_attributes }}>
+    <div class="artist-story__portrait">
+      {%- if portrait != blank -%}
+        {% render 'image', image: portrait, alt_text_fallback: artist_name %}
+      {%- endif -%}
+    </div>
+
+    <div class="artist-story__body">
+      <h1 class="artist-story__name">{{ artist_name }}</h1>
+
+      {%- if blurb != blank -%}
+        <p class="artist-story__blurb">{{ blurb }}</p>
+      {%- endif -%}
+
+      {%- if artist.bio != blank -%}
+        {%- comment -%}
+          metafield_tag renders rich text to HTML. Outputting the field directly
+          dumps the raw JSON document instead.
+        {%- endcomment -%}
+        <div class="artist-story__bio">{{ artist.bio | metafield_tag }}</div>
+      {%- endif -%}
+
+      {%- if signature != blank -%}
+        <img
+          class="artist-story__signature"
+          src="{{ signature | image_url: height: 88 }}"
+          alt=""
+          loading="lazy"
+          width="150"
+          height="44"
+        >
+      {%- endif -%}
+
+      {%- if artist_collection != blank -%}
+        <a class="artist-story__link" href="{{ artist_collection.url }}">
+          {{ block.settings.link_label | default: 'View works' }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+{%- else -%}
+  <div class="artist-card__empty">
+    No artist to show. On an artist page this fills itself in; elsewhere, pick one in the
+    block settings.
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Artist story",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On an artist page this uses the artist being viewed. Leave the picker empty there."
+    },
+    {
+      "type": "metaobject",
+      "id": "artist",
+      "metaobject_type": "artist",
+      "label": "Artist",
+      "info": "Only needed when this block is used outside an artist page."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link text",
+      "info": "Shown only when the artist has a collection set.",
+      "default": "View works"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Artist story"
+    }
+  ]
+}
+{% endschema %}

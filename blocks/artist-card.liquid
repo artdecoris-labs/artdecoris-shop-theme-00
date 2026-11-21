@@ -1,0 +1,77 @@
+{% comment %}
+  Art Decoris — a single artist card.
+  Use inside any section for featuring one artist. For "Meet the artists",
+  use the artist-grid block instead, which picks up new artists automatically.
+{% endcomment %}
+
+{{ 'artist.css' | asset_url | stylesheet_tag }}
+
+<div class="artist-card-block" {{ block.shopify_attributes }}>
+  {%- if block.settings.artist != blank -%}
+    {% render 'artist-card',
+      artist: block.settings.artist,
+      show_blurb: block.settings.show_blurb,
+      show_signature: block.settings.show_signature,
+      cta_label: block.settings.cta_label,
+      heading_tag: block.settings.heading_tag
+    %}
+  {%- else -%}
+    <div class="artist-card">
+      <p class="artist-card__empty">Pick an artist in the block settings.</p>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Artist card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "metaobject",
+      "id": "artist",
+      "metaobject_type": "artist",
+      "label": "Artist"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_blurb",
+      "label": "Show short description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_signature",
+      "label": "Show signature",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Link text",
+      "info": "Leave blank to hide. The whole card is clickable either way.",
+      "default": "View works"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading level",
+      "info": "Use h2 when the card is not inside a section that already has a heading.",
+      "options": [
+        { "value": "h2", "label": "h2" },
+        { "value": "h3", "label": "h3" }
+      ],
+      "default": "h3"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Artist card"
+    }
+  ]
+}
+{% endschema %}
