@@ -1,0 +1,130 @@
+{%- doc -%}
+  "Design by <artist>": the artist of the selected variant, with a small
+  portrait and a link to the artist's page. Art Decoris addition, not part of
+  stock Horizon. Put it in the product details, under the variant picker.
+
+  Which artist, first match wins:
+    1. the variant's metafield `custom.artist` (an `artist` entry), so each
+       design of one product can come from a different artist;
+    2. the product's metafield `custom.artist`;
+    3. the `artist` entry whose `vendor` equals the product's vendor.
+  With no artist the block renders nothing.
+
+  When the shopper picks another variant, assets/variant-artist.js swaps in
+  this block from the page Shopify renders for that variant.
+{%- enddoc -%}
+
+{{ 'artist.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'variant-artist.js' | asset_url }}" type="module"></script>
+
+{%- liquid
+  assign product_resource = closest.product
+  assign variant = product_resource.selected_or_first_available_variant
+
+  assign artist = variant.metafields.custom.artist.value
+  if artist == blank
+    assign artist = product_resource.metafields.custom.artist.value
+  endif
+  if artist == blank and product_resource.vendor != blank
+    for entry in shop.metaobjects.artist.values
+      if entry.vendor.value == product_resource.vendor
+        assign artist = entry
+        break
+      endif
+    endfor
+  endif
+
+  if artist != blank
+    assign artist_name = artist.name.value | default: artist.system.handle
+    assign portrait = artist.portrait.value
+    assign artist_url = artist.system.url
+    if artist_url == blank and artist.collection.value != blank
+      assign artist_url = artist.collection.value.url
+    endif
+  endif
+-%}
+
+<variant-artist
+  class="variant-artist spacing-style"
+  data-block-id="{{ block.id }}"
+  data-product-id="{{ product_resource.id }}"
+  style="{% render 'spacing-style', settings: block.settings %}"
+  {{ block.shopify_attributes }}
+>
+  {%- if artist != blank -%}
+    {%- capture artist_line -%}
+      {%- if block.settings.show_portrait and portrait != blank -%}
+        <span class="variant-artist__portrait">
+          {{- portrait | image_url: width: 96 | image_tag: width: 48, height: 48, alt: '', loading: 'lazy' -}}
+        </span>
+      {%- endif -%}
+      <span class="variant-artist__text">
+        {{- block.settings.label | escape }}
+        <span class="variant-artist__name">{{ artist_name | escape }}</span>
+      </span>
+    {%- endcapture -%}
+
+    {%- if artist_url != blank -%}
+      <a class="variant-artist__link" href="{{ artist_url }}">
+        {{- artist_line -}}
+        <span class="variant-artist__arrow" aria-hidden="true">&rsaquo;</span>
+      </a>
+    {%- else -%}
+      <div class="variant-artist__link">{{ artist_line }}</div>
+    {%- endif -%}
+  {%- endif -%}
+</variant-artist>
+
+{% schema %}
+{
+  "name": "Artist of the design",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows the artist of the selected variant: the variant's custom.artist, else the product's, else the artist whose vendor is the product's vendor."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Design by"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_portrait",
+      "label": "Show portrait",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Artist of the design"
+    }
+  ]
+}
+{% endschema %}

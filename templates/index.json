@@ -54,9 +54,20 @@
             "custom_width_mobile": 100
           },
           "blocks": {}
+        },
+        "youtube_background_Wz7bLz": {
+          "type": "youtube-background",
+          "settings": {
+            "video_1": "https://www.youtube.com/watch?v=wZkGbLzYU4I",
+            "title": "Art Decoris: Eyes On The Artist",
+            "overlay_opacity": 40,
+            "show_on_mobile": true
+          },
+          "blocks": {}
         }
       },
       "block_order": [
+        "youtube_background_Wz7bLz",
         "text_YLPk4p",
         "button_H9gpTf"
       ],
@@ -78,7 +89,7 @@
         "vertical_alignment_flex_direction_column": "flex-end",
         "gap": 24,
         "section_width": "page-width",
-        "section_height": "medium",
+        "section_height": "full-screen",
         "section_height_custom": 50,
         "background_color": "rgba(0,0,0,0)",
         "toggle_overlay": true,
@@ -90,7 +101,10 @@
         "padding-block-start": 100,
         "padding-block-end": 72,
         "image_1": "shopify://shop_images/hero-interior.webp"
-      }
+      },
+      "custom_css": [
+        ".hero {min-height: 100svh;}"
+      ]
     },
     "product_list_fa6P9H": {
       "type": "product-list",

@@ -108,7 +108,8 @@
       "color1": "#3A352F",
       "color2": "#DED7CC"
     },
-    "logo": "shopify://shop_images/artdecoris-logo.png"
+    "logo": "shopify://shop_images/artdecoris-logo.png",
+    "logo_inverse": "shopify://shop_images/artdecoris-logo-white.png"
   },
   "presets": {
     "Horizon": {

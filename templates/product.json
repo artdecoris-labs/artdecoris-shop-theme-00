@@ -213,6 +213,16 @@
               },
               "blocks": {}
             },
+            "variant_artist_Ad5k9Q": {
+              "type": "variant-artist",
+              "settings": {
+                "label": "Design by",
+                "show_portrait": true,
+                "padding-block-start": 0,
+                "padding-block-end": 8
+              },
+              "blocks": {}
+            },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
@@ -304,6 +314,7 @@
             "group_icgrde",
             "divider_VJhene",
             "variant_picker_R3rGDr",
+            "variant_artist_Ad5k9Q",
             "buy_buttons_eYQEYi",
             "text_aEtTtq"
           ]
