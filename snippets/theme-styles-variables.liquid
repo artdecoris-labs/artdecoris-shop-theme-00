@@ -124,6 +124,12 @@
   %}
 
   :root {
+    /* Safe area insets — non-zero on notched devices because meta-tags.liquid sets viewport-fit=cover */
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-right: env(safe-area-inset-right, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-area-inset-left: env(safe-area-inset-left, 0px);
+
     /* Page Layout */
     --sidebar-width: 25rem;
     --theme-drawer-width: 30rem;
@@ -559,9 +565,24 @@
     --button-padding-inline: 24px;
     --button-padding-block: 16px;
 
-    /* Button font-family */
+    /* Button font: the accent font brings its own style and weight; body buttons keep the paragraph style and weight */
+    {%- liquid
+      assign button_font_primary_preset = settings.type_font_button_primary
+      if button_font_primary_preset == 'body'
+        assign button_font_primary_preset = 'paragraph'
+      endif
+
+      assign button_font_secondary_preset = settings.type_font_button_secondary
+      if button_font_secondary_preset == 'body'
+        assign button_font_secondary_preset = 'paragraph'
+      endif
+    -%}
     --button-font-family-primary: var(--font-{{ settings.type_font_button_primary }}--family);
     --button-font-family-secondary: var(--font-{{ settings.type_font_button_secondary }}--family);
+    --button-font-style-primary: var(--font-{{ button_font_primary_preset }}--style);
+    --button-font-style-secondary: var(--font-{{ button_font_secondary_preset }}--style);
+    --button-font-weight-primary: var(--font-{{ button_font_primary_preset }}--weight);
+    --button-font-weight-secondary: var(--font-{{ button_font_secondary_preset }}--weight);
 
     /* Button text case */
     --button-text-case-primary: {{ settings.button_text_case_primary }};
@@ -622,7 +643,12 @@
     /* Modal */
     --modal-max-height: 65dvh;
     --quick-add-modal-height: min(38.5rem, 96vh);
-    --quick-add-modal-width: min(54rem, 96vw);
+    /* Centered dialog: reserve the larger side inset on both edges so a landscape
+       notch cannot cover the close button. 2vw keeps the original 96vw gutter. */
+    --quick-add-modal-width: min(
+      54rem,
+      calc(100vw - 2 * max(2vw, var(--safe-area-inset-left), var(--safe-area-inset-right)))
+    );
     --quick-add-modal-gallery-width: 24rem;
 
     /* Card styles for search */
