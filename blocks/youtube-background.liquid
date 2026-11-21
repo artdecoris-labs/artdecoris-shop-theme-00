@@ -1,0 +1,136 @@
+{%- doc -%}
+  A YouTube video as the moving background of a hero: muted, looping, no
+  controls, from youtube-nocookie.com, as artdecoris.com plays it. Art
+  Decoris addition, not part of stock Horizon.
+
+  Add it as a block of a Hero section. It fills the whole hero behind the
+  other blocks; the hero's own image stays underneath, so it shows while the
+  player loads and when the video does not play (reduced motion, blocked
+  YouTube, or "Show on mobile" off).
+{%- enddoc -%}
+
+{%- liquid
+  assign video = block.settings.video
+  assign video_id = video.id
+-%}
+
+{%- if video != blank and video.type == 'youtube' -%}
+  {%- capture params -%}
+    autoplay=1&mute=1&loop=1&playlist={{ video_id }}&controls=0&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&disablekb=1&fs=0
+  {%- endcapture -%}
+  <div
+    class="youtube-background{% unless block.settings.show_on_mobile %} youtube-background--desktop-only{% endunless %}"
+    style="--youtube-background-overlay: {{ block.settings.overlay_opacity | divided_by: 100.0 }};"
+    aria-hidden="true"
+    {{ block.shopify_attributes }}
+  >
+    <iframe
+      src="https://www.youtube-nocookie.com/embed/{{ video_id }}?{{ params | strip }}"
+      title="{{ block.settings.title | escape }}"
+      allow="autoplay; encrypted-media; picture-in-picture"
+      referrerpolicy="strict-origin-when-cross-origin"
+      tabindex="-1"
+      loading="eager"
+    ></iframe>
+  </div>
+{%- elsif request.design_mode -%}
+  <p {{ block.shopify_attributes }}>Pick a YouTube video for the background.</p>
+{%- endif -%}
+
+{% stylesheet %}
+  /* The hero's content wrapper is positioned; let this block reach past it to
+     the hero container, and keep the other blocks above it. */
+  .hero__content-wrapper:has(> .youtube-background) {
+    position: static;
+  }
+
+  .hero__content-wrapper:has(> .youtube-background) > :not(.youtube-background) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .youtube-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+    container-type: size;
+  }
+
+  /* Cover the hero like object-fit: cover, for a 16:9 player. */
+  .youtube-background iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100cqw, 177.78cqh);
+    height: max(100cqh, 56.25cqw);
+    transform: translate(-50%, -50%);
+    border: 0;
+  }
+
+  .youtube-background::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / var(--youtube-background-overlay, 0.4));
+  }
+
+  @media screen and (max-width: 749px) {
+    .youtube-background--desktop-only {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .youtube-background {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "YouTube background",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Plays a YouTube video muted and looping behind the hero's text. The hero's image shows while it loads and when it can't play."
+    },
+    {
+      "type": "video_url",
+      "id": "video",
+      "label": "YouTube video",
+      "accept": ["youtube"]
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Video title (for screen readers)",
+      "default": "Background video"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Darken the video",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "label": "Show on mobile",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "YouTube background"
+    }
+  ]
+}
+{% endschema %}

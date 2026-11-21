@@ -54,9 +54,20 @@
             "custom_width_mobile": 100
           },
           "blocks": {}
+        },
+        "youtube_background_Wz7bLz": {
+          "type": "youtube-background",
+          "settings": {
+            "video": "https://www.youtube.com/watch?v=wZkGbLzYU4I",
+            "title": "Eyes On The Artist: BRASS",
+            "overlay_opacity": 40,
+            "show_on_mobile": true
+          },
+          "blocks": {}
         }
       },
       "block_order": [
+        "youtube_background_Wz7bLz",
         "text_YLPk4p",
         "button_H9gpTf"
       ],
