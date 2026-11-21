@@ -8,6 +8,26 @@
   <head>
     {%- render 'stylesheets' -%}
     {{ 'template-giftcard.css' | asset_url | stylesheet_tag }}
+    <style>
+      /* Art Decoris: the bought design fills the card, the logo sits on it. */
+      .gift-card__image-wrapper--design {
+        position: relative;
+        padding: 0;
+      }
+      .gift-card__design {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .gift-card__design-logo {
+        position: absolute;
+        inset-block-start: 1rem;
+        inset-inline-start: 1rem;
+        width: 22%;
+        height: auto;
+        filter: drop-shadow(0 1px 3px rgb(0 0 0 / 0.5));
+      }
+    </style>
 
     <script type="importmap">
       {
@@ -120,6 +140,24 @@
     </header>
 
     <main class="gift-card__main">
+      {%- comment -%}
+        Art Decoris: show the artwork of the design that was bought (the
+        variant's image), with the logo on it. Falls back to Horizon's logo
+        card when the gift card has no image.
+      {%- endcomment -%}
+      {%- assign design_image = gift_card.line_item.image | default: gift_card.product.featured_image -%}
+      {%- if design_image != blank -%}
+        <div class="gift-card__image-wrapper gift-card__image-wrapper--design">
+          {{
+            design_image
+            | image_url: width: 1000
+            | image_tag: class: 'gift-card__design', alt: '', loading: 'eager', widths: '500, 750, 1000'
+          }}
+          {%- if settings.logo_inverse != blank -%}
+            {{ settings.logo_inverse | image_url: width: 200 | image_tag: class: 'gift-card__design-logo', alt: shop.name }}
+          {%- endif -%}
+        </div>
+      {%- else -%}
       <div class="gift-card__image-wrapper">
         {%- if settings.logo != blank -%}
           {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
@@ -135,6 +173,7 @@
           >
         {%- endif %}
       </div>
+      {%- endif -%}
       <div class="gift-card__price">
         <h2>
           <bdi>{{ gift_card.balance | money_with_currency }}</bdi>
