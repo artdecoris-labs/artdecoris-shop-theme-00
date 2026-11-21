@@ -226,3 +226,47 @@
 .artist-story__link:focus-visible {
   border-bottom-color: var(--color-foreground);
 }
+
+/* "Design by <artist>" under the variant picker (blocks/variant-artist.liquid). */
+
+.variant-artist:empty {
+  display: none;
+}
+
+.variant-artist__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-foreground);
+  text-decoration: none;
+}
+
+.variant-artist__portrait img {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(var(--color-foreground-rgb), 0.12);
+}
+
+.variant-artist__text {
+  font-size: var(--font-size--sm, 0.875rem);
+  color: rgba(var(--color-foreground-rgb), 0.72);
+}
+
+.variant-artist__name {
+  color: var(--color-foreground);
+  font-weight: var(--font-subheading--weight, 600);
+  border-bottom: 1px solid transparent;
+}
+
+a.variant-artist__link:hover .variant-artist__name,
+a.variant-artist__link:focus-visible .variant-artist__name {
+  border-bottom-color: currentColor;
+}
+
+.variant-artist__arrow {
+  font-size: 1.25em;
+  line-height: 1;
+}
