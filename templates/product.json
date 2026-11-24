@@ -408,13 +408,41 @@
                 "accordion_row_specifications",
                 "accordion_row_delivery"
               ]
+            },
+            "design_swatches_ovs": {
+              "type": "design-swatches",
+              "settings": {
+                "label": "Design",
+                "show_name": true,
+                "size": 56,
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              }
+            },
+            "cushion_companions_ovs": {
+              "type": "cushion-companions",
+              "settings": {
+                "inner_product": "inner-cushion",
+                "contents_option": "Contents",
+                "cover_value": "Cover only",
+                "size_option": "Size",
+                "label_inner": "Add the inner cushion",
+                "label_add": "Add to cart",
+                "show_other": true,
+                "label_outdoor": "Also for outdoors",
+                "label_indoor": "Also for indoors",
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              }
             }
           },
           "block_order": [
             "group_icgrde",
             "divider_VJhene",
             "variant_picker_R3rGDr",
+            "design_swatches_ovs",
             "variant_artist_Ad5k9Q",
+            "cushion_companions_ovs",
             "buy_buttons_eYQEYi",
             "accordion_Rz8mTp"
           ]
