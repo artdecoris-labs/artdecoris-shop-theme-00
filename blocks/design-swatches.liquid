@@ -1,0 +1,167 @@
+{%- doc -%}
+  Design swatches: the other creations of the same kind of product, each a
+  small picture that opens that design's own product. Like colour swatches,
+  but with the artists' designs (OVS decision D-10). Put it in the product
+  details, under the variant picker.
+
+  The list is the product's metafield `custom.designs` (a list of products,
+  this one included), which OntoVibeShift keeps in step with Odoo: a new design
+  joins every list by itself. A product without the list renders nothing.
+{%- enddoc -%}
+
+{%- liquid
+  assign product_resource = closest.product
+  assign designs = product_resource.metafields.custom.designs.value
+  assign size = block.settings.size | default: 56
+-%}
+
+{%- if designs != blank and designs.size > 1 -%}
+  <div
+    class="design-swatches spacing-style"
+    style="{% render 'spacing-style', settings: block.settings %} --design-swatch-size: {{ size }}px;"
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.label != blank -%}
+      <p class="design-swatches__label">
+        {{ block.settings.label | escape }}
+        {%- if block.settings.show_name %}: <span class="design-swatches__current">{{ product_resource.metafields.ovs.design.value | default: product_resource.title | escape }}</span>{% endif -%}
+      </p>
+    {%- endif -%}
+    <ul class="design-swatches__list" role="list">
+      {%- for design in designs -%}
+        {%- liquid
+          assign current = false
+          if design.id == product_resource.id
+            assign current = true
+          endif
+          assign name = design.metafields.ovs.design.value | default: design.title
+        -%}
+        <li class="design-swatches__item">
+          <a
+            class="design-swatches__swatch{% if current %} design-swatches__swatch--current{% endif %}"
+            href="{{ design.url }}"
+            title="{{ name | escape }}"
+            {% if current %}aria-current="page"{% endif %}
+          >
+            {%- if design.featured_image != blank -%}
+              {{- design.featured_image | image_url: width: 160 | image_tag: width: size, height: size, alt: name, loading: 'lazy' -}}
+            {%- else -%}
+              <span class="design-swatches__initial" aria-hidden="true">{{ name | slice: 0 }}</span>
+              <span class="visually-hidden">{{ name | escape }}</span>
+            {%- endif -%}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .design-swatches__label {
+    margin: 0 0 0.5rem;
+    font-size: 0.875rem;
+  }
+  .design-swatches__current {
+    font-weight: 600;
+  }
+  .design-swatches__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .design-swatches__swatch {
+    display: grid;
+    place-items: center;
+    width: var(--design-swatch-size, 56px);
+    height: var(--design-swatch-size, 56px);
+    overflow: hidden;
+    border-radius: 50%;
+    outline: 1px solid rgb(var(--color-foreground-rgb, 0 0 0) / 0.15);
+    outline-offset: 2px;
+    text-decoration: none;
+    transition: outline-color 0.15s ease;
+  }
+  .design-swatches__swatch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .design-swatches__swatch:hover,
+  .design-swatches__swatch:focus-visible {
+    outline-color: rgb(var(--color-foreground-rgb, 0 0 0) / 0.5);
+  }
+  .design-swatches__swatch--current {
+    outline: 2px solid currentColor;
+  }
+  .design-swatches__initial {
+    font-size: 1.25rem;
+    text-transform: uppercase;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Design swatches",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows the other designs of the same kind as swatches, from the product's custom.designs. Each opens its own product."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Design"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_name",
+      "label": "Show the chosen design's name",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "size",
+      "label": "Swatch size",
+      "min": 32,
+      "max": 96,
+      "step": 4,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Design swatches"
+    }
+  ]
+}
+{% endschema %}
