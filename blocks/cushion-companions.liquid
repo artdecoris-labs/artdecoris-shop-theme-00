@@ -1,0 +1,128 @@
+{%- doc -%}
+  Under the variant picker of a cushion (OVS, Loop 2):
+    1. with "Cover only" chosen, the inner cushion that fits it, to add as well:
+       the smallest inner cushion at least as large as the cover (Odoo's inner
+       cushions are a size up: a 45 x 45 cm cover takes the 47 x 47 cm one);
+    2. the same design in the other type, from the product's metafield
+       custom.counterpart, which OntoVibeShift keeps in step with Odoo.
+  Each part shows only when it has something to show.
+
+  When the shopper picks another variant, assets/cushion-companions.js swaps
+  in this block from the page Shopify renders for that variant.
+{%- enddoc -%}
+
+<script src="{{ 'cushion-companions.js' | asset_url }}" type="module"></script>
+
+{%- liquid
+  assign product_resource = closest.product
+  assign variant = product_resource.selected_or_first_available_variant
+
+  assign contents_value = ''
+  assign size_value = ''
+  for option in product_resource.options_with_values
+    assign at = forloop.index0
+    if option.name == block.settings.contents_option
+      assign contents_value = variant.options[at]
+    endif
+    if option.name == block.settings.size_option
+      assign size_value = variant.options[at]
+    endif
+  endfor
+
+  assign inner = block.settings.inner_product
+  assign inner_variant = blank
+  if inner != blank and contents_value == block.settings.cover_value and size_value != ''
+    assign cover_size = size_value | split: ' ' | first | plus: 0
+    assign best = 100000
+    for v in inner.variants
+      assign v_size = v.title | split: ' ' | first | plus: 0
+      if v.available and v_size >= cover_size and v_size < best
+        assign best = v_size
+        assign inner_variant = v
+      endif
+    endfor
+  endif
+
+  assign other = product_resource.metafields.custom.counterpart.value
+  if product_resource.tags contains 'indoor'
+    assign other_label = block.settings.label_outdoor
+  else
+    assign other_label = block.settings.label_indoor
+  endif
+-%}
+
+<cushion-companions
+  class="cushion-companions spacing-style"
+  data-block-id="{{ block.id }}"
+  data-product-id="{{ product_resource.id }}"
+  style="{% render 'spacing-style', settings: block.settings %}"
+  {{ block.shopify_attributes }}
+>
+  {%- if inner_variant != blank -%}
+    <div class="cushion-companions__inner">
+      <p class="cushion-companions__heading">{{ block.settings.label_inner | escape }}</p>
+      <div class="cushion-companions__row">
+        {%- assign picture = inner_variant.featured_image | default: inner.featured_image -%}
+        {%- if picture != blank -%}
+          {{ picture | image_url: width: 160 | image_tag: width: 64, height: 64, alt: inner.title, loading: 'lazy', class: 'cushion-companions__img' }}
+        {%- endif -%}
+        <span class="cushion-companions__text">
+          <a href="{{ inner_variant.url }}">{{ inner.title | escape }}, {{ inner_variant.title | escape }}</a>
+          <span class="cushion-companions__price">{{ inner_variant.price | money }}</span>
+        </span>
+        <form action="{{ routes.cart_add_url }}" method="post" class="cushion-companions__add">
+          <input type="hidden" name="id" value="{{ inner_variant.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="button button-secondary">{{ block.settings.label_add | escape }}</button>
+        </form>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.show_other and other != blank -%}
+    <a class="cushion-companions__other" href="{{ other.url }}">
+      {%- if other.featured_image != blank -%}
+        {{ other.featured_image | image_url: width: 120 | image_tag: width: 40, height: 40, alt: '', loading: 'lazy', class: 'cushion-companions__img' }}
+      {%- endif -%}
+      <span>{{ other_label | escape }}</span>
+      <span aria-hidden="true">&rsaquo;</span>
+    </a>
+  {%- endif -%}
+</cushion-companions>
+
+{% stylesheet %}
+  .cushion-companions { display: grid; gap: 0.75rem; }
+  .cushion-companions__heading { margin: 0 0 0.35rem; font-size: 0.875rem; font-weight: 600; }
+  .cushion-companions__row { display: flex; align-items: center; gap: 0.75rem; }
+  .cushion-companions__img { border-radius: 6px; object-fit: cover; flex: none; }
+  .cushion-companions__text { display: grid; gap: 0.15rem; flex: 1; font-size: 0.9rem; }
+  .cushion-companions__price { opacity: 0.8; }
+  .cushion-companions__add { margin: 0; }
+  .cushion-companions__other { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; text-decoration: underline; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Cushion companions",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "With \"Cover only\" chosen: the inner cushion that fits it. And the same design in the other type (custom.counterpart)."
+    },
+    { "type": "product", "id": "inner_product", "label": "Inner cushion product" },
+    { "type": "text", "id": "contents_option", "label": "Contents option name", "default": "Contents" },
+    { "type": "text", "id": "cover_value", "label": "Value meaning cover only", "default": "Cover only" },
+    { "type": "text", "id": "size_option", "label": "Size option name", "default": "Size" },
+    { "type": "text", "id": "label_inner", "label": "Inner cushion heading", "default": "Add the inner cushion" },
+    { "type": "text", "id": "label_add", "label": "Add button", "default": "Add to cart" },
+    { "type": "checkbox", "id": "show_other", "label": "Show the other type", "default": true },
+    { "type": "text", "id": "label_outdoor", "label": "Link to the outdoor version", "default": "Also for outdoors" },
+    { "type": "text", "id": "label_indoor", "label": "Link to the indoor version", "default": "Also for indoors" },
+    { "type": "header", "content": "t:content.padding" },
+    { "type": "range", "id": "padding-block-start", "label": "t:settings.top", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding-block-end", "label": "t:settings.bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Cushion companions" }]
+}
+{% endschema %}
