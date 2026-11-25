@@ -1,6 +1,8 @@
 {%- doc -%}
   Under the variant picker of a cushion (OVS, Loop 2):
     1. with "Cover only" chosen, the inner cushion that fits it, to add as well:
+       the one the cover names (its variant's metafield custom.inner_cushion,
+       which OntoVibeShift writes from Odoo's sizes); for a cover without it,
        the smallest inner cushion at least as large as the cover (Odoo's inner
        cushions are a size up: a 45 x 45 cm cover takes the 47 x 47 cm one);
     2. the same design in the other type, from the product's metafield
@@ -31,7 +33,12 @@
 
   assign inner = block.settings.inner_product
   assign inner_variant = blank
-  if inner != blank and contents_value == block.settings.cover_value and size_value != ''
+  # the cover names its inner cushion (custom.inner_cushion), so no label is parsed
+  assign named = variant.metafields.custom.inner_cushion.value
+  if named != blank and contents_value == block.settings.cover_value and named.available
+    assign inner_variant = named
+    assign inner = named.product
+  elsif inner != blank and contents_value == block.settings.cover_value and size_value != ''
     assign cover_size = size_value | split: ' ' | first | plus: 0
     assign best = 100000
     for v in inner.variants
